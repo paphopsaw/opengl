@@ -58,11 +58,7 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
 
-	Shader myShader("../resources/shaders/vertex.shader", "../resources/shaders/fragment.shader");
-
-	myShader.use();
-	glBindVertexArray(vao);
-
+	Shader myShader("../resources/shaders/shader.vert", "../resources/shaders/shader.frag");
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -70,7 +66,9 @@ int main() {
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-
+		
+		glBindVertexArray(vao);
+		myShader.use();
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
