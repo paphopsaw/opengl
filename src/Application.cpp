@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <string>
+#include "Shader.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -11,25 +12,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-}
-
-unsigned int createShader(unsigned int shaderType, const std::string& source) {
-	const char* shaderSource = source.c_str();
-	unsigned int shader = glCreateShader(shaderType);
-	glShaderSource(shader, 1, &shaderSource, NULL);
-	glCompileShader(shader);
-	int success;
-	char infoLog[512];
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-	if (!success) {
-		glGetShaderInfoLog(shader, 512, NULL, infoLog);
-		std::cout << "Error shader compilation: " << 
-			(shaderType == GL_VERTEX_SHADER ? "vertex" : "fragment") << std::endl;
-		std::cout << infoLog << std::endl;
-		return -1;
-	}
-	return shader;
 }
 
 int main() {
@@ -76,31 +58,9 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
 
-	std::string vertexShaderSource = "#version 330 core\n"
-		"layout (location = 0) in vec3 aPos;\n"
-		"void main() {\n"
-		"	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-		"}\0";
+	Shader myShader("../resources/shaders/vertex.shader", "../resources/shaders/fragment.shader");
 
-	std::string fragmentShaderSource = "#version 330 core\n"
-		"out vec4 FragColor;\n"
-		"\n"
-		"void main() {\n"
-		"	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-		"}\0";
-
-	unsigned int vertexShader   = createShader(GL_VERTEX_SHADER, vertexShaderSource);
-	unsigned int fragmentShader = createShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
-	
-	unsigned int shaderProgram;
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	glUseProgram(shaderProgram);
+	myShader.use();
 	glBindVertexArray(vao);
 
 
