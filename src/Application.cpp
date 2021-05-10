@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include "Shader.h"
-
+#include "config.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -15,6 +15,7 @@ void processInput(GLFWwindow* window) {
 }
 
 int main() {
+	std::string rootDir = PROJECT_ROOT;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -58,7 +59,10 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
 
-	Shader myShader("../resources/shaders/shader.vert", "../resources/shaders/shader.frag");
+	std::cout << (rootDir + "/resources/shaders/shader.vert").c_str();
+	Shader myShader(
+		(rootDir + "/resources/shaders/shader.vert").c_str(),
+		(rootDir + "/resources/shaders/shader.frag").c_str());
 
 	while (!glfwWindowShouldClose(window))
 	{
