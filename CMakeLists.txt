@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
 configure_file (
@@ -24,18 +23,20 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/dependencies/glfw/include
     ${CMAKE_SOURCE_DIR}/dependencies/glad/include
+    ${CMAKE_SOURCE_DIR}/dependencies/stb_image
     ${PROJECT_BINARY_DIR}
     )
 
 file (GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
     ${CMAKE_SOURCE_DIR}/src/*.h
-    ${CMAKE_SOURCE_DIR}/src//*.hpp
-    ${CMAKE_SOURCE_DIR}/src//*.c
-    ${CMAKE_SOURCE_DIR}/src//*.cpp
+    ${CMAKE_SOURCE_DIR}/src/*.hpp
+    ${CMAKE_SOURCE_DIR}/src/*.c
+    ${CMAKE_SOURCE_DIR}/src/*.cpp
 )
 
 add_executable(${PROJECT_NAME}
     ${CMAKE_SOURCE_DIR}/dependencies/glad/lib/glad.c
+    ${CMAKE_SOURCE_DIR}/dependencies/stb_image/stb_image.cpp
     ${SRC_FILES}
     )
 
