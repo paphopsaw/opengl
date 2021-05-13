@@ -23,7 +23,8 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/dependencies/glfw/include
     ${CMAKE_SOURCE_DIR}/dependencies/glad/include
-    ${CMAKE_SOURCE_DIR}/dependencies/stb_image
+    ${CMAKE_SOURCE_DIR}/dependencies/stb_image/include
+    ${CMAKE_SOURCE_DIR}/dependencies/glm/include
     ${PROJECT_BINARY_DIR}
     )
 
@@ -36,7 +37,7 @@ file (GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
 
 add_executable(${PROJECT_NAME}
     ${CMAKE_SOURCE_DIR}/dependencies/glad/lib/glad.c
-    ${CMAKE_SOURCE_DIR}/dependencies/stb_image/stb_image.cpp
+    ${CMAKE_SOURCE_DIR}/dependencies/stb_image/lib/stb_image.cpp
     ${SRC_FILES}
     )
 
