@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 #include "Shader.h"
+#include "Texture.h"
 #include "config.h"
-#include "stb_image.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -79,28 +79,19 @@ int main() {
 	Shader myShader(
 		(rootDir + "/resources/shaders/shader.vert").c_str(),
 		(rootDir + "/resources/shaders/shader.frag").c_str());
+	myShader.bind();
+	myShader.setFloat("xOffset", 0.3f);
 
 
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	Texture2D texture1((rootDir + "/resources/textures/wall.jpg").c_str(), GL_RGB);
+	Texture2D texture2((rootDir + "/resources/textures/awesomeface.png").c_str(), GL_RGBA);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	texture1.bind(0);
+	texture2.bind(1);
 
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load((rootDir + "/resources/textures/wall.jpg").c_str(), &width, &height, &nrChannels, 0);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	
-	}
-	else {
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
+	myShader.setInt("texture1", 0);
+	myShader.setInt("texture2", 1);
+
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -108,11 +99,9 @@ int main() {
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		
-		glBindTexture(GL_TEXTURE_2D, texture);
+
 		glBindVertexArray(vao);
-		myShader.setFloat("xOffset", 0.3f);
-		myShader.use();
+		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);

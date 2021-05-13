@@ -8,14 +8,16 @@
 #include <iostream>
 
 class Shader {
-    public:
+    private:
         unsigned int ID;
-
+    public:
         //Constructor
         Shader(const char* vertexPath, const char* fragmentPath);
+        ~Shader();
 
         //Use shader
-        void use();
+        void bind() const;
+        void unbind() const;
 
         //Add uniforms
         void setBool(const std::string &name, bool value) const;
