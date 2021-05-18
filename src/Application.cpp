@@ -20,11 +20,6 @@ void processInput(GLFWwindow* window) {
 
 int main() {
 	const std::string rootDir = PROJECT_ROOT;
-	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
-	vec = trans * vec;
-	std::cout << vec.x << vec.y << vec.z << std::endl;
 
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -51,11 +46,11 @@ int main() {
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	float vertices[] = {
-		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+		// positions        // texture coords
+		 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,   // top right
+		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,   // bottom right
+		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,   // bottom left
+		-0.5f,  0.5f, 0.0f, 0.0f, 1.0f    // top left 
 	};
 
 	unsigned int indices[] = {
@@ -76,21 +71,16 @@ int main() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
 	Shader myShader(
 		(rootDir + "/resources/shaders/shader.vert").c_str(),
 		(rootDir + "/resources/shaders/shader.frag").c_str());
 	myShader.bind();
-	myShader.setFloat("xOffset", 0.3f);
-
 
 	Texture2D texture1((rootDir + "/resources/textures/wall.jpg").c_str(), GL_RGB);
 	Texture2D texture2((rootDir + "/resources/textures/awesomeface.png").c_str(), GL_RGBA);
@@ -110,6 +100,10 @@ int main() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glBindVertexArray(vao);
+		glm::mat4 trans = glm::mat4(1.0f);
+		trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+		trans = glm::rotate(trans, static_cast<float>(glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+		myShader.setMat4("transform", glm::value_ptr(trans));
 		
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
