@@ -14,13 +14,15 @@ find_package(OpenGL REQUIRED)
 
 IF(MSVC)
   set(GLFW_LIBRARY  ${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/glfw3.lib)
-ELSE()
-  set(GLFW_LIBRARY  ${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/libglfw3.a)
+ELSEIF(APPLE)
+  set(GLFW_LIBRARY  ${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/libglfw3_mac.a)
+ELSEIF(UNIX)
+  set(GLFW_LIBRARY  ${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/libglfw3_linux.a)
 ENDIF()
 
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/src/commons
     ${CMAKE_SOURCE_DIR}/dependencies/glfw/include
     ${CMAKE_SOURCE_DIR}/dependencies/glad/include
     ${CMAKE_SOURCE_DIR}/dependencies/stb_image/include
@@ -28,34 +30,47 @@ include_directories(
     ${PROJECT_BINARY_DIR}
     )
 
-file (GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
-    ${CMAKE_SOURCE_DIR}/src/*.h
-    ${CMAKE_SOURCE_DIR}/src/*.hpp
-    ${CMAKE_SOURCE_DIR}/src/*.c
-    ${CMAKE_SOURCE_DIR}/src/*.cpp
+file (GLOB_RECURSE COMMONS CONFIGURE_DEPENDS
+    ${CMAKE_SOURCE_DIR}/src/commons/*.h
+    ${CMAKE_SOURCE_DIR}/src/commons/*.cpp
 )
-
-add_executable(${PROJECT_NAME}
-    ${CMAKE_SOURCE_DIR}/dependencies/glad/lib/glad.c
-    ${CMAKE_SOURCE_DIR}/dependencies/stb_image/lib/stb_image.cpp
-    ${SRC_FILES}
-    )
-
     
-if (APPLE)
+IF (APPLE)
     find_library( COCOA_LIBRARY Cocoa )
     find_library( IOKIT_LIBRARY IOKit )
     find_library( COREVIDEO_LIBRARY CoreVideo )
-    target_link_libraries(${PROJECT_NAME}
+    link_libraries(
         ${OPENGL_LIBRARY}
         ${GLFW_LIBRARY}
         ${COCOA_LIBRARY}
         ${IOKIT_LIBRARY}
         ${COREVIDEO_LIBRARY})
 
+ELSEIF(UNIX)
+    link_libraries(
+        ${OPENGL_LIBRARY}
+        ${GLFW_LIBRARY}
+        -lrt -lm -ldl -lX11 -lpthread -lxcb -lXau -lXdmcp
+        )
+
 ELSEIF(MSVC)
-    target_link_libraries(${PROJECT_NAME}
+    link_libraries(
         ${OPENGL_LIBRARY}
         ${GLFW_LIBRARY}
         )
 ENDIF()
+
+
+add_executable(GettingStarted
+    ${CMAKE_SOURCE_DIR}/src/GettingStarted.cpp
+    ${CMAKE_SOURCE_DIR}/dependencies/glad/lib/glad.c
+    ${CMAKE_SOURCE_DIR}/dependencies/stb_image/lib/stb_image.cpp
+    ${COMMONS}
+    )
+
+add_executable(Lighting
+    ${CMAKE_SOURCE_DIR}/src/Lighting.cpp
+    ${CMAKE_SOURCE_DIR}/dependencies/glad/lib/glad.c
+    ${CMAKE_SOURCE_DIR}/dependencies/stb_image/lib/stb_image.cpp
+    ${COMMONS}
+    )

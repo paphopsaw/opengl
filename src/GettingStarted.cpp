@@ -59,9 +59,6 @@ void scroll_callback(GLFWwindow* window, double xOffset, double yOffset) {
 	camera.processMouseScroll(yOffset);
 }
 
-
-
-
 int main() {
 	const std::string rootDir = PROJECT_ROOT;
 
@@ -175,8 +172,8 @@ int main() {
 	glEnableVertexAttribArray(1);
 
 	Shader myShader(
-		(rootDir + "/resources/shaders/shader.vert").c_str(),
-		(rootDir + "/resources/shaders/shader.frag").c_str());
+		(rootDir + "/resources/shaders/shader1.vs").c_str(),
+		(rootDir + "/resources/shaders/shader1.fs").c_str());
 	myShader.bind();
 
 	Texture2D texture1((rootDir + "/resources/textures/wall.jpg").c_str(), GL_RGB);
