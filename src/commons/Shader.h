@@ -6,6 +6,9 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class Shader {
 private:
@@ -24,6 +27,7 @@ public:
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;
     void setVec3(const std::string &name, float x, float y, float z) const;
+    void setVec3(const std::string& name, glm::vec3 value) const;
     void setMat4(const std::string& name, float* value_ptr) const;
 private:
     void checkCompileErrors(unsigned int shader, std::string type);
