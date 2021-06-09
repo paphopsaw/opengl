@@ -21,6 +21,11 @@ glm::vec3 Camera::getPosition()
 	return position;
 }
 
+glm::vec3 Camera::getFront()
+{
+	return front;
+}
+
 void Camera::processKeyboard(Camera_movement direction, float deltaTime)
 {
 	float velocity = deltaTime * movementSpeed;

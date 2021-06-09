@@ -172,8 +172,8 @@ int main() {
 	glEnableVertexAttribArray(1);
 
 	Shader myShader(
-		(rootDir + "/resources/shaders/shader1.vs").c_str(),
-		(rootDir + "/resources/shaders/shader1.fs").c_str());
+		(rootDir + "/resources/shaders/1.started.vs").c_str(),
+		(rootDir + "/resources/shaders/1.started.fs").c_str());
 	myShader.bind();
 
 	Texture2D texture1((rootDir + "/resources/textures/wall.jpg").c_str(), GL_RGB);
