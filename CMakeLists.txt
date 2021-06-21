@@ -12,6 +12,8 @@ project(LearnOpenGL)
 
 find_package(OpenGL REQUIRED)
 
+
+
 IF(MSVC)
   set(GLFW_LIBRARY  ${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/glfw3.lib)
 ELSEIF(APPLE)
@@ -20,6 +22,14 @@ ELSEIF(UNIX)
   set(GLFW_LIBRARY  ${CMAKE_SOURCE_DIR}/dependencies/glfw/lib/libglfw3_linux.a)
 ENDIF()
 
+# Assimp
+
+
+set(ZLIB_LIBRARIES zlibstatic)
+set(ENABLE_BOOST_WORKAROUND ON)
+set(BUILD_SHARED_LIBS OFF)
+set(BUILD_ASSIMP_TOOLS  ON)
+add_subdirectory(dependencies/assimp-5.0.1)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/src/commons
@@ -27,6 +37,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/dependencies/glad/include
     ${CMAKE_SOURCE_DIR}/dependencies/stb_image/include
     ${CMAKE_SOURCE_DIR}/dependencies/glm/include
+    ${CMAKE_SOURCE_DIR}/dependencies/assimp-5.0.1/include
     ${PROJECT_BINARY_DIR}
     )
 
@@ -57,6 +68,8 @@ ELSEIF(MSVC)
     link_libraries(
         ${OPENGL_LIBRARY}
         ${GLFW_LIBRARY}
+        ${ZLIB_LIBRARIES}
+        assimp
         )
 ENDIF()
 
@@ -70,6 +83,13 @@ add_executable(GettingStarted
 
 add_executable(Lighting
     ${CMAKE_SOURCE_DIR}/src/Lighting.cpp
+    ${CMAKE_SOURCE_DIR}/dependencies/glad/lib/glad.c
+    ${CMAKE_SOURCE_DIR}/dependencies/stb_image/lib/stb_image.cpp
+    ${COMMONS}
+    )
+
+add_executable(ModelLoading
+    ${CMAKE_SOURCE_DIR}/src/ModelLoading.cpp
     ${CMAKE_SOURCE_DIR}/dependencies/glad/lib/glad.c
     ${CMAKE_SOURCE_DIR}/dependencies/stb_image/lib/stb_image.cpp
     ${COMMONS}
